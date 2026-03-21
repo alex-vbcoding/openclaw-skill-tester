@@ -1,5 +1,11 @@
 const fs = require('fs-extra');
 const path = require('path');
+const {
+  validateDependencies,
+  checkSecurity,
+  validateSkillMd,
+  validateStructure
+} = require('./validators');
 
 async function testSkill(skillPath, options = {}) {
   const result = {
@@ -71,6 +77,33 @@ async function testSkill(skillPath, options = {}) {
     result.warnings.push('No README.md found (recommended)');
   } else {
     addTest(result, 'README.md exists', true, 'Documentation found');
+  }
+
+  // Test 6: Validate dependencies
+  const depsCheck = await validateDependencies(skillPath);
+  if (depsCheck.warnings) {
+    result.warnings.push(...depsCheck.warnings);
+  }
+  addTest(result, 'Dependencies validation', depsCheck.passed, depsCheck.message);
+
+  // Test 7: Security checks
+  const securityCheck = await checkSecurity(skillPath);
+  if (securityCheck.warnings) {
+    result.warnings.push(...securityCheck.warnings);
+  }
+  addTest(result, 'Security check', securityCheck.passed, securityCheck.message);
+
+  // Test 8: Advanced SKILL.md validation
+  const skillMdCheck = await validateSkillMd(skillPath);
+  if (skillMdCheck.warnings) {
+    result.warnings.push(...skillMdCheck.warnings);
+  }
+  addTest(result, 'SKILL.md structure', skillMdCheck.passed, skillMdCheck.message);
+
+  // Test 9: Project structure recommendations
+  const structureCheck = await validateStructure(skillPath);
+  if (structureCheck.warnings) {
+    result.warnings.push(...structureCheck.warnings);
   }
 
   // Calculate score
