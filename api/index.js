@@ -9,8 +9,8 @@ const app = express();
 const upload = multer({ dest: '/tmp/uploads/' });
 
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '../web/views'));
-app.use(express.static(path.join(__dirname, '../web/public')));
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 // Home page - simple upload form only
