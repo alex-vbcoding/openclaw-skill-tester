@@ -11,6 +11,15 @@ const {
   testLoad,
   testSmoke
 } = require('./executor');
+const {
+  checkDependencyConflicts,
+  checkSecurityVulnerabilities
+} = require('./dependency-checker');
+const {
+  measureSize,
+  measureLoadTime,
+  analyzeDependencies
+} = require('./performance');
 
 async function testSkill(skillPath, options = {}) {
   const result = {
@@ -129,6 +138,63 @@ async function testSkill(skillPath, options = {}) {
     const smokeCheck = await testSmoke(skillPath);
     if (!smokeCheck.skipped) {
       addTest(result, 'Smoke test', smokeCheck.passed, smokeCheck.message);
+    }
+
+    // Test 13: Dependency conflicts
+    const conflictCheck = await checkDependencyConflicts(skillPath);
+    if (!conflictCheck.skipped) {
+      if (conflictCheck.warnings) {
+        result.warnings.push(...conflictCheck.warnings);
+      }
+      addTest(result, 'Dependency conflicts', conflictCheck.passed, conflictCheck.message);
+    }
+
+    // Test 14: Security vulnerabilities
+    const securityAudit = await checkSecurityVulnerabilities(skillPath);
+    if (!securityAudit.skipped) {
+      addTest(result, 'Security audit', securityAudit.passed, securityAudit.message);
+      if (securityAudit.vulnerabilities) {
+        result.securityVulnerabilities = securityAudit.vulnerabilities;
+      }
+    }
+  }
+
+  // Performance tests (always run, lightweight)
+  if (options.performance !== false) {
+    // Test 15: Package size
+    const sizeCheck = await measureSize(skillPath);
+    if (sizeCheck.warnings) {
+      result.warnings.push(...sizeCheck.warnings);
+    }
+    addTest(result, 'Package size', sizeCheck.passed, sizeCheck.message);
+    if (sizeCheck.metrics) {
+      result.sizeMetrics = sizeCheck.metrics;
+    }
+
+    // Test 16: Load time (only if execution tests are enabled)
+    if (options.execution !== false) {
+      const loadTimeCheck = await measureLoadTime(skillPath);
+      if (!loadTimeCheck.skipped) {
+        if (loadTimeCheck.warnings) {
+          result.warnings.push(...loadTimeCheck.warnings);
+        }
+        addTest(result, 'Load time', loadTimeCheck.passed, loadTimeCheck.message);
+        if (loadTimeCheck.metrics) {
+          result.performanceMetrics = loadTimeCheck.metrics;
+        }
+      }
+    }
+
+    // Test 17: Dependency analysis
+    const depsAnalysis = await analyzeDependencies(skillPath);
+    if (!depsAnalysis.skipped) {
+      if (depsAnalysis.warnings) {
+        result.warnings.push(...depsAnalysis.warnings);
+      }
+      addTest(result, 'Dependency analysis', depsAnalysis.passed, depsAnalysis.message);
+      if (depsAnalysis.metrics) {
+        result.dependencyMetrics = depsAnalysis.metrics;
+      }
     }
   }
 

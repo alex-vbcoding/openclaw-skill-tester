@@ -18,6 +18,7 @@ program
   .option('--ci', 'CI mode - exit with code 1 if tests fail')
   .option('-b, --batch', 'Treat skillPath as directory containing multiple skills')
   .option('--no-execution', 'Skip execution tests (install/load/smoke)')
+  .option('--no-performance', 'Skip performance tests (size/load time/deps)')
   .action(async (skillPath, options) => {
     try {
       if (options.batch) {
