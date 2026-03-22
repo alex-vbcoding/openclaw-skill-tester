@@ -33,18 +33,48 @@ npm link
 
 ## Usage
 
+### Test a Single Skill
+
 ```bash
-# Test a single skill
 openclaw-skill-tester test ./path/to/skill
+```
 
-# Test multiple skills
-openclaw-skill-tester test ./skills/*
+### Batch Testing
 
-# Generate report
+Test multiple skills in a directory:
+
+```bash
+openclaw-skill-tester test ./skills --batch
+```
+
+### JSON Output
+
+```bash
 openclaw-skill-tester test ./skill --report json
+```
 
-# CI mode (exit code 1 if fails)
+### CI/CD Integration
+
+Exit with code 1 if tests fail (perfect for CI pipelines):
+
+```bash
 openclaw-skill-tester test ./skill --ci
+```
+
+### GitHub Actions Example
+
+```yaml
+name: Test Skill Quality
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - run: npm install -g openclaw-skill-tester
+      - run: openclaw-skill-tester test . --ci
 ```
 
 ## Roadmap

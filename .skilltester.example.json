@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "rules": {
+    "minScore": 80,
+    "requiredFiles": ["SKILL.md", "README.md", "LICENSE"],
+    "recommendedFiles": ["CHANGELOG.md", ".gitignore"],
+    "securityChecks": {
+      "checkCredentials": true,
+      "checkDangerousPatterns": true
+    },
+    "skipTests": []
+  },
+  "thresholds": {
+    "minDescriptionLength": 100,
+    "warnOnMissingDocs": true
+  }
+}
