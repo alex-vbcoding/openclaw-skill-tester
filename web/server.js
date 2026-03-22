@@ -7,7 +7,7 @@ const Database = require('./database');
 
 const app = express();
 const db = new Database();
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: 'web/uploads/' });
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -21,22 +21,28 @@ app.get('/', async (req, res) => {
   res.render('index', { recentTests, topSkills });
 });
 
-// Test skill endpoint
-app.post('/api/test', upload.single('skill'), async (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded' });
+// Test skill endpoint with directory upload
+app.post('/api/test-upload', upload.array('files'), async (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ error: 'No files uploaded' });
   }
 
-  const tempDir = path.join('uploads', `test-${Date.now()}`);
+  const tempDir = path.join('web/uploads', `test-${Date.now()}`);
   
   try {
-    // Extract uploaded zip/tarball
     await fs.ensureDir(tempDir);
-    // TODO: Extract archive (simplified for now - assume directory upload)
+    
+    // Reconstruct directory structure from uploaded files
+    for (const file of req.files) {
+      const relativePath = file.originalname;
+      const targetPath = path.join(tempDir, relativePath);
+      await fs.ensureDir(path.dirname(targetPath));
+      await fs.move(file.path, targetPath);
+    }
     
     // Run tests
     const result = await testSkill(tempDir, { 
-      execution: true,
+      execution: false, // Skip execution for web (security)
       performance: true 
     });
 
@@ -54,8 +60,7 @@ app.post('/api/test', upload.single('skill'), async (req, res) => {
     res.status(500).json({ error: error.message });
   } finally {
     // Cleanup
-    await fs.remove(tempDir);
-    await fs.remove(req.file.path);
+    await fs.remove(tempDir).catch(() => {});
   }
 });
 
