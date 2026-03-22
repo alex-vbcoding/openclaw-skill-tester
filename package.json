@@ -8,13 +8,21 @@
   },
   "scripts": {
     "test": "node src/test-runner.js",
-    "start": "node bin/cli.js"
+    "start": "node bin/cli.js",
+    "web": "node web/server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alex-vbcoding/openclaw-skill-tester.git"
   },
-  "keywords": ["openclaw", "skills", "testing", "validation", "cli", "quality"],
+  "keywords": [
+    "openclaw",
+    "skills",
+    "testing",
+    "validation",
+    "cli",
+    "quality"
+  ],
   "author": "Alex Chen <alex@metaleap.so>",
   "license": "MIT",
   "bugs": {
@@ -22,8 +30,12 @@
   },
   "homepage": "https://github.com/alex-vbcoding/openclaw-skill-tester#readme",
   "dependencies": {
-    "commander": "^12.0.0",
     "chalk": "^5.3.0",
-    "fs-extra": "^11.2.0"
+    "commander": "^12.0.0",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "fs-extra": "^11.2.0",
+    "multer": "^2.1.1",
+    "sqlite3": "^6.0.1"
   }
 }

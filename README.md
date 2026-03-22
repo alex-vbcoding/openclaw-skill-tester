@@ -72,6 +72,19 @@ jobs:
       - run: openclaw-skill-tester test . --ci
 ```
 
+### Web Interface (Phase 3)
+
+Run the web server locally:
+
+```bash
+git clone https://github.com/alex-vbcoding/openclaw-skill-tester.git
+cd openclaw-skill-tester
+npm install
+npm run web
+```
+
+Then open http://localhost:3000 to see skill rankings and test results!
+
 ## Roadmap
 
 **Phase 1** (Complete ✅): CLI tool
@@ -90,10 +103,13 @@ jobs:
 - [ ] Performance benchmarks
 - [ ] Integration tests
 
-**Phase 3** (Future): Web interface
-- [ ] Public testing service
-- [ ] Skill quality rankings
+**Phase 3** (In Progress 🚧): Web interface
+- [x] Web server (Express + SQLite)
+- [x] Skill rankings page
+- [x] Recent tests display
+- [ ] File upload functionality
 - [ ] Community ratings
+- [ ] Public deployment
 
 ## Contributing
 
