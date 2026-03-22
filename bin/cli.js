@@ -17,6 +17,7 @@ program
   .option('-r, --report <format>', 'Report format (json|text)', 'text')
   .option('--ci', 'CI mode - exit with code 1 if tests fail')
   .option('-b, --batch', 'Treat skillPath as directory containing multiple skills')
+  .option('--no-execution', 'Skip execution tests (install/load/smoke)')
   .action(async (skillPath, options) => {
     try {
       if (options.batch) {

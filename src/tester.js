@@ -6,6 +6,11 @@ const {
   validateSkillMd,
   validateStructure
 } = require('./validators');
+const {
+  testInstall,
+  testLoad,
+  testSmoke
+} = require('./executor');
 
 async function testSkill(skillPath, options = {}) {
   const result = {
@@ -104,6 +109,27 @@ async function testSkill(skillPath, options = {}) {
   const structureCheck = await validateStructure(skillPath);
   if (structureCheck.warnings) {
     result.warnings.push(...structureCheck.warnings);
+  }
+
+  // Execution tests (Phase 2) - optional, controlled by option
+  if (options.execution !== false) {
+    // Test 10: Dependency installation
+    const installCheck = await testInstall(skillPath);
+    if (!installCheck.skipped) {
+      addTest(result, 'Dependency installation', installCheck.passed, installCheck.message);
+    }
+
+    // Test 11: Module loading
+    const loadCheck = await testLoad(skillPath);
+    if (!loadCheck.skipped) {
+      addTest(result, 'Module loading', loadCheck.passed, loadCheck.message);
+    }
+
+    // Test 12: Smoke test
+    const smokeCheck = await testSmoke(skillPath);
+    if (!smokeCheck.skipped) {
+      addTest(result, 'Smoke test', smokeCheck.passed, smokeCheck.message);
+    }
   }
 
   // Calculate score
