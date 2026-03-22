@@ -1,0 +1,39 @@
+name: Test Skill Quality
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Test valid skill fixture
+        run: node bin/cli.js test test-fixtures/valid-skill
+      
+      - name: Test bad skill fixture (should fail)
+        run: node bin/cli.js test test-fixtures/bad-skill || echo "Expected failure"
+      
+      - name: Test batch mode
+        run: node bin/cli.js test test-fixtures --batch
+      
+      - name: Verify CI mode fails on bad skill
+        run: |
+          if node bin/cli.js test test-fixtures/bad-skill --ci; then
+            echo "ERROR: CI mode should have failed!"
+            exit 1
+          else
+            echo "✅ CI mode correctly failed on bad skill"
+          fi
