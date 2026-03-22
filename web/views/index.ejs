@@ -105,7 +105,13 @@
 <body>
   <div class="container">
     <h1>🧪 OpenClaw Skill Tester</h1>
-    <p class="tagline">Test and validate OpenClaw skills - quality scoring, security checks, and performance benchmarks</p>
+    <p class="tagline">
+      <% if (simple) { %>
+        Upload your skill directory and get instant quality analysis
+      <% } else { %>
+        Test and validate OpenClaw skills - quality scoring, security checks, and performance benchmarks
+      <% } %>
+    </p>
 
     <div class="upload-section">
       <h2>Test Your Skill</h2>
@@ -116,6 +122,7 @@
       <div id="result" style="margin-top: 20px;"></div>
     </div>
 
+    <% if (!simple) { %>
     <div class="section">
       <h2>🏆 Top Skills</h2>
       <table>
@@ -148,7 +155,9 @@
         </tbody>
       </table>
     </div>
+    <% } %>
 
+    <% if (!simple) { %>
     <div class="section">
       <h2>📊 Recent Tests</h2>
       <table>
@@ -183,6 +192,7 @@
         </tbody>
       </table>
     </div>
+    <% } %>
 
     <div style="text-align:center;margin-top:40px;color:#999;">
       <p>Open source on <a href="https://github.com/alex-vbcoding/openclaw-skill-tester" style="color:#667eea;">GitHub</a></p>
