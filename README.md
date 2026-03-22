@@ -21,15 +21,10 @@ With 5,400+ skills in the OpenClaw ecosystem, it's hard to know which ones work 
 ## Installation
 
 ```bash
-# Coming soon - npm package
 npm install -g openclaw-skill-tester
-
-# For now - clone and run locally
-git clone https://github.com/alex-vbcoding/openclaw-skill-tester.git
-cd openclaw-skill-tester
-npm install
-npm link
 ```
+
+**Package:** https://www.npmjs.com/package/openclaw-skill-tester
 
 ## Usage
 
